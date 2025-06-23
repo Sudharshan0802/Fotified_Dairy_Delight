@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Orders</title>
+
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh; /* Changed to min-height for better styling */
+            overflow-y: auto; /* Enable vertical scrolling */
+        }
+
+        h1 {
+            color: #1a1a1a;
+            margin-top: 20px;
+        }
+
+        .order-container {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 20px auto; /* Center the container */
+            padding: 20px;
+            width: 70%;
+            max-width: 600px;
+            box-sizing: border-box;
+            transition: box-shadow 0.3s ease-in-out;
+        }
+
+        .order-container:hover {
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .order-container p {
+            margin: 0;
+            padding: 5px 0;
+        }
+
+        .order-container .order-details {
+            margin-top: 10px;
+        }
+
+        .order-container .order-details ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .order-container .order-details li {
+            margin-bottom: 5px;
+        }
+
+        hr {
+            margin: 15px 0;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Admin Orders</h1>
+
+    {% for order in orders %}
+        <div class="order-container">
+            <p><strong>Order ID:</strong> {{ order.id }}</p>
+            <p><strong>Total Amount:</strong> ₹{{ order.total_amount }}</p>
+            <!-- <p><strong>Order Date:</strong> {% if order.timestamp %}{{ order.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}{% else %}N/A{% endif %}</p> -->
+            <p><strong>Customer:</strong> {{ order.customer.username }}</p>
+
+            <!-- Display order details -->
+            <div class="order-details">
+                <p><strong>Products:</strong></p>
+                <ul>
+                    {% for detail in order_details if detail.order_id == order.id %}
+            <li>{{ detail.product_name }} - Quantity: {{ detail.quantity }} - Price: ₹{{ detail.price }}</li>
+        {% endfor %}
+                </ul>
+            </div>
+
+            <hr>
+        </div>
+    {% endfor %}
+
+</body>
+</html>

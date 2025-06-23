@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Add necessary meta tags and styles -->
+</head>
+<body>
+    <h1>Order Details</h1>
+
+    <p><strong>Order ID:</strong> {{ order.id }}</p>
+    <p><strong>Total Amount:</strong> ₹{{ order.total_amount }}</p>
+    <p><strong>Order Date:</strong> {{ order.order_date.strftime("%Y-%m-%d %H:%M:%S") }}</p>
+
+    <!-- Display customer information for admins -->
+    {% if current_user.is_admin %}
+        <p><strong>Customer:</strong> {{ order.customer.username }}</p>
+    {% endif %}
+
+    <div class="order-details">
+        <p><strong>Products:</strong></p>
+        <ul>
+            {% for item in order.cart_items %}
+                <li>{{ item.product.name }} - Quantity: {{ item.quantity }} - Price: ₹{{ item.product.price }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Add any other relevant information or actions -->
+
+    <a href="{{ url_for('home') }}">Back to Home</a>
+</body>
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <!-- Include reCAPTCHA script -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f3f3f3;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #e77600; /* Amazon orange color */
+        }
+
+        form {
+            max-width: 400px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .g-recaptcha {
+            margin-bottom: 15px;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        p {
+            margin-top: 20px;
+        }
+
+        a {
+            text-decoration: none;
+            color: #0066c0; /* Amazon blue color */
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .btn-secondary {
+            background-color: #ccc;
+            color: #333;
+            padding: 10px;
+            text-decoration: none;
+            display: inline-block;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        .btn-secondary:hover {
+            background-color: #ddd;
+        }
+
+        /* .wrong-password {
+            display: none;
+            text-align: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            z-index: 9999;
+        }
+
+        .wrong-password img {
+            width: 500px;
+            height: 500px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: floatImage 10s ease-in-out forwards;
+        } */
+    
+    </style>
+</head>
+
+<h1 align="center">Login</h1>
+
+<body>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Display the wrong password GIF if the user entered the wrong password -->
+    <!-- <div class="wrong-password" id="wrong-password">
+        <img src="static\you-are-totally-wrong-the-legend.gif" alt="Wrong Password GIF">
+    </div> -->
+
+    <form method="POST" action="{{ url_for('login') }}">
+        <label for="username">Username:</label>
+        <input type="text" name="username" required><br>
+
+        <label for="password">Password:</label>
+        <input type="password" name="password" required><br>
+
+        <div class="g-recaptcha" data-sitekey="6LddK48oAAAAANWq8b3ygub2QtxAMOUgte42SL3O"></div><br>
+
+        <button type="submit" onclick="showWrongPassword()">Login</button>
+    </form>
+
+    {% if current_user.is_authenticated %}
+        {% if current_user.is_admin %}
+            <p>You are logged in as an admin. Redirecting to the admin dashboard...</p>
+        {% else %}
+            <p>You are logged in. Redirecting to the home page...</p>
+        {% endif %}
+    {% else %}
+        <p>Don't have an account? <a href="{{ url_for('register') }}">Register here</a></p>
+
+        <!-- Add a button to go back to the home page -->
+        <a href="{{ url_for('home') }}" class="btn-secondary">Back to Home</a>
+    {% endif %}
+
+    <script>
+        // function showWrongPassword() {
+        //     // Show the wrong password GIF when the user clicks the Login button
+        //     document.getElementById('wrong-password').style.display = 'block';
+        // }
+    </script>
+</body>
+
+</html>

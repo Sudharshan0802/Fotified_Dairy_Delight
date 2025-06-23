@@ -1,0 +1,8 @@
+Flask>=2.0
+Flask-SQLAlchemy>=2.5
+Flask-Login>=0.5
+Flask-Bcrypt>=1.0
+requests>=2.25
+pyotp>=2.6
+Werkzeug>=2.0
+click>=8.0

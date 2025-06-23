@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Cart</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f3f3f3;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #e77600; /* Amazon orange color */
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #4caf50;
+            color: white;
+        }
+
+        form {
+            display: inline-block;
+            margin-bottom: 10px; /* Add some space between the forms */
+        }
+
+        input[type="number"] {
+            width: 50px;
+        }
+
+        input[type="submit"] {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        p {
+            margin-top: 20px;
+            text-align: right;
+            font-weight: bold;
+        }
+
+        a {
+            text-decoration: none;
+            color: #0066c0; /* Amazon blue color */
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .checkout-link {
+            background-color: #0066c0;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: inline-block;
+            margin-top: 10px;
+            text-decoration: none;
+        }
+
+        .checkout-link:hover {
+            background-color: #004080;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Your Cart</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Subtotal</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in cart_items %}
+            <tr>
+                <td>{{ item.product.name }}</td>
+                <td>
+                    <form method="post" action="{{ url_for('update_cart') }}">
+                        <input type="hidden" name="item_id" value="{{ item.id }}" />
+                        <input type="number" name="quantity" value="{{ item.quantity }}" min="1" />
+                        <input type="submit" value="Update" />
+                    </form>
+                </td>
+                <td>₹{{ item.product.price }}</td>
+                <td>₹{{ item.product.price * item.quantity }}</td>
+                <td>
+                    <a href="{{ url_for('remove_from_cart', item_id=item.id) }}">Remove</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <p>Total: ₹{{ total_amount }}</p>
+    <a href="{{ url_for('home') }}">Continue Shopping</a>
+
+    <!-- Form for checkout -->
+    <form action="{{ url_for('place_order') }}" method="post">
+        <input type="text" name="name" placeholder="Name" required>
+        <input type="text" name="shipping_address" placeholder="Shipping Address" required>
+        <input type="text" name="card_number" placeholder="Card Number" required>
+        <input type="text" name="expiry_date" placeholder="Expiry Date" required>
+        <input type="text" name="cvv" placeholder="CVV" required>
+        <!-- Add other form fields as needed -->
+        <input type="submit" value="Place Order" class="checkout-link">
+    </form>
+
+    <!-- Existing code to display cart items -->
+    <ul>
+        {% for item in cart_items %}
+            <li>{{ item.product.name }} - Quantity: {{ item.quantity }} - Price: ₹{{ item.product.price * item.quantity }}</li>
+        {% endfor %}
+    </ul>
+
+    <!-- Add any additional content or styling as needed -->
+
+</body>
+
+</html>

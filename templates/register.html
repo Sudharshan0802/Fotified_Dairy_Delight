@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f8f8;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            position: relative;
+        }
+
+        h1 {
+            color: #e77600;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        form {
+            max-width: 400px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        #password-strength,
+        #password-match {
+            margin-top: 10px;
+            color: #333;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        p {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        a {
+            text-decoration: none;
+            color: #0066c0;
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const passwordInput = document.getElementById('password');
+            const confirmPasswordInput = document.getElementById('confirm-password');
+            const strengthIndicator = document.getElementById('password-strength');
+            const passwordMatchMessage = document.getElementById('password-match');
+            const registerButton = document.getElementById('register-button');
+
+            passwordInput.addEventListener('input', function () {
+                const password = passwordInput.value;
+                const confirmPassword = confirmPasswordInput.value;
+
+                // Validate password match
+                validatePasswordMatch(password, confirmPassword);
+
+                const strength = calculatePasswordStrength(password);
+                updateStrengthIndicator(strength);
+
+                // Enable or disable the register button based on password strength and match
+                registerButton.disabled = strength < 4 || !validatePasswordMatch(password, confirmPassword);
+            });
+
+            confirmPasswordInput.addEventListener('input', function () {
+                const password = passwordInput.value;
+                const confirmPassword = confirmPasswordInput.value;
+
+                // Validate password match
+                validatePasswordMatch(password, confirmPassword);
+
+                // Enable or disable the register button based on password match
+                registerButton.disabled = !validatePasswordMatch(password, confirmPassword);
+            });
+
+            function validatePasswordMatch(password, confirmPassword) {
+                const match = password === confirmPassword;
+                passwordMatchMessage.textContent = match ? 'Passwords match' : 'Passwords do not match';
+                passwordMatchMessage.style.color = match ? 'green' : 'red';
+
+                return match;
+            }
+
+            function calculatePasswordStrength(password) {
+                // Password requirements
+                const minLength = 8;
+                const hasUpperCase = /[A-Z]/.test(password);
+                const hasLowerCase = /[a-z]/.test(password);
+                const hasNumbers = /\d/.test(password);
+                const hasSpecialChars = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+                // Calculate strength based on requirements
+                const meetsLength = password.length >= minLength;
+                const meetsRequirements = hasUpperCase && hasLowerCase && hasNumbers && hasSpecialChars;
+
+                // Assign strength levels
+                if (meetsLength && meetsRequirements) {
+                    return 5; // Very Strong
+                } else if (meetsRequirements) {
+                    return 4; // Strong
+                } else if (meetsLength) {
+                    return 3; // Moderate
+                } else if (password.length > 0) {
+                    return 2; // Weak
+                } else {
+                    return 1; // Very Weak
+                }
+            }
+
+            function updateStrengthIndicator(strength) {
+                const indicators = ['Very Weak', 'Weak', 'Moderate', 'Strong', 'Very Strong'];
+                const strengthText = indicators[strength - 1];
+                strengthIndicator.textContent = `Password Strength: ${strengthText}`;
+            }
+        });
+    </script>
+</head>
+
+<body>
+    <h1>Register</h1>
+
+    <form method="POST" action="{{ url_for('register') }}">
+        <label for="username">Username:</label>
+        <input type="text" name="username" required>
+
+        <label for="password">Password:</label>
+        <input type="password" name="password" id="password" required>
+        <div id="password-strength"></div>
+
+        <label for="confirm-password">Re-enter Password:</label>
+        <input type="password" name="confirm-password" id="confirm-password" required>
+        <div id="password-match"></div>
+
+        <button type="submit" id="register-button" disabled>Register</button>
+    </form>
+
+    <p>Already have an account? <a href="{{ url_for('login') }}">Login here</a></p>
+
+</body>
+
+</html>
